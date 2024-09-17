@@ -1,0 +1,127 @@
+{% extends 'base_admin.html' %}
+
+{% block titulo %}Admin - Pedidos{% endblock %}
+
+{% block conteudo %}  
+  <div class="container">
+    
+    <div>
+      <h1><p class="text-center">Lista de pedidos</p></h1>
+    </div>
+
+    <table class="table table-hover table-sm table-bordered align-middle">
+      <thead class="table-dark text-center">
+      <tr>          
+          <th scope="col">Data e Hora</th>            
+          <th scope="col">Descrição</th>            
+          <th scope="col">Categoria</th>            
+          <th scope="col">Qtde</th>            
+          <th scope="col">Liberado</th>            
+          <th scope="col" width="13%" >Unidade de saúde</th>
+          <th scope="col">Justificativa</th>                                 
+          <th scope="col">Finalização</th>            
+          <th scope="col">Status</th>            
+          <th scope="col" width="8%">Ações</th>            
+      </tr>
+      </thead>
+      <tbody>
+        {% for pedido in pedidos: %}                   
+            <tr>                
+                <td> {{ pedido[1] }} </td>            
+                <td> {{ pedido[2] }} </td>
+                <td> {{ pedido[3] }} </td>
+                <td class="text-center"> {{ pedido[4] }} </td>
+                <td class="text-center"> {{ pedido[5] }} </td>
+                <td name="justificativa"> {{ pedido[6] }} </td>
+                <td> {{ pedido[7] }} </td>
+                <td> {{ pedido[8] }} </td>
+                
+                {% if pedido[9] == 0 %}
+                  <td class="text-secondary"><b>Pendente</b></td>
+                {% elif pedido[9] == 1 %}
+                  <td class="text-success"><b>Concluído</b></td>
+                {% else %}
+                  <td></td>
+                {% endif %}     
+                
+                <td>                                        
+                    <div class="container">                        
+                        <a class="btn btn-success btn-sm" data-bs-toggle="modal" data-bs-target="#pedidosModal" href="#"><i class="bi bi-trash3-fill"></i>Atender</a>                        
+                    </div>
+                </td>
+            </tr>                              
+        {% endfor %}
+      </tbody>
+    </table>
+    
+  </div>
+  
+<!-- Modal -->
+<div class="modal fade" id="pedidosModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    
+  <div class="modal-dialog modal-lg">
+    
+    <div class="modal-content">
+      
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="exampleModalLabel">Atender pedido</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      
+      <div class="modal-body">        
+
+        <form action="{{url_for('admin.admin_pedidos.atender')}}" method="post">
+          
+          <div class="row mb-3 g-2">
+            <input type="hidden" id="id_pedido_hidden" name="id_pedido" value="" />                
+            <!-- Primeira linha -->
+            <div class="col-12">
+              <label for="justificativa" class="form-label">Justificativa</label>
+              <textarea class="form-control" id="justificativa" rows="3" name="justificativaModal" disabled></textarea>
+            </div>
+            <!-- FIM da primeira linha -->
+
+            <!-- Segunda linha -->
+            <div class="col-6">
+              <label for="descricao" class="form-label">Descrição</label>
+              <input type="text" class="form-control" id="descricao" name="descricao" disabled>
+            </div> 
+            <div class="col-6">
+              <label for="categoria" class="form-label">Categoria</label>
+              <input type="text" class="form-control" id="categoria" name="categoria" disabled>
+            </div>
+            <!-- FIM da segunda linha -->
+            
+            <!-- Terceira linha -->
+            <div class="col-2">
+              <label for="quantidade" class="form-label">Quantidade</label>
+              <input type="number" class="form-control" id="quantidade" name="quantidade" disabled>
+            </div>            
+            <div class="col-6">
+              <label for="unidade_saude" class="form-label">Unidade de Saúde</label>
+              <input type="text" class="form-control" id="unidade_saude" name="unidade_saude" disabled>
+            </div> 
+            <div class="col-2">
+              <label for="status" class="form-label">Status</label>
+              <input type="number" class="form-control" id="status" name="status" disabled>
+            </div> 
+            <div class="col-2">
+              <label for="quantidade_liberada" class="form-label">Qtde. liberada</label>
+              <input type="number" class="form-control" id="quantidade_liberada" name="quantidade_liberada">
+            </div>   
+            <!-- FIM da terceira linha -->
+          </div>
+          <div class="modal-footer">
+            <!-- <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button> -->
+            <button type="submit" class="btn btn-primary"><i class="bi bi-floppy"></i> Atender pedido</button>
+          </div>
+        </form>
+      </div>        
+    </div>
+  </div>
+</div> 
+
+<script src="{{url_for('static', filename='js/script.js')}}"></script>
+<script src="{{url_for('static', filename='js/admin/carregar.js')}}"></script>
+
+{% endblock %}

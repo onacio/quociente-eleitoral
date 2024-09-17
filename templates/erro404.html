@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Página Não Encontrada</title>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+        }
+        .container {
+            text-align: center;
+            padding: 2rem;
+            border-radius: 8px;
+        }
+        .message {
+            font-size: 1.5rem;
+            color: #333;
+            margin-top: 1rem;
+        }
+        .illustration {
+            width: 100%;
+            max-width: 300px;
+            margin-bottom: 1rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <img src="{{ url_for('static', filename='img/erro-404.png') }}" alt="Imagem Ilustrativa" class="illustration">
+        <p class="message">Página não encontrada ou você não tem acesso a essa rota!</p>
+    </div>
+</body>
+</html>

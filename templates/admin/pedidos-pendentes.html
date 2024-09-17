@@ -1,0 +1,70 @@
+{% extends 'base_admin.html' %}
+
+{% block titulo %}Admin - Pedidos{% endblock %}
+
+{% block conteudo %}
+    
+    <div class="mt-2">
+      <h1><p class="text-center">PEDIDOS PENDENTES DE LIBERAÇÃO</p></h1>
+    </div>
+
+    <div class="m-3">
+      {% with messages = get_flashed_messages(with_categories=true) %}
+          {% if messages %}
+              {% for categoria, mensagem in messages %}
+                  <div class="alert alert-{{ categoria }}" role="alert">
+                      {% if categoria == 'success' %}
+                          <i class="bi bi-emoji-sunglasses-fill"></i>
+                          <b>{{ mensagem }}</b>
+                      {% else %}
+                          <i class="bi bi-exclamation-triangle"></i>
+                          <b>{{ mensagem }}</b>
+                      {% endif %}
+                  </div>   
+              {% endfor %}                     
+          {% endif %}
+      {% endwith %}
+    </div>
+
+    <div class="m-3">      
+      <table id="tabela" class="table table-striped">
+        <thead>
+          <tr>          
+              <th scope="col">Data</th>            
+              <th scope="col">Hora</th>            
+              <th scope="col" width="15%">Descrição</th>            
+              <th scope="col">Categoria</th>            
+              <th scope="col">Qtde</th>                          
+              <th scope="col">Solicitante</th>              
+              <th scope="col">Justificativa</th>                          
+              <th scope="col" width="9%">Ação</th>            
+          </tr>
+        </thead>
+        <tbody>
+          {% if pedidos != False %}        
+            {% for pedido in pedidos: %}
+              {% if pedido[10] == 0 %}                   
+                <tr>                
+                    <td> {{ pedido[1] }} </td>            
+                    <td> {{ pedido[2] }} </td>            
+                    <td> {{ pedido[3] }} </td>
+                    <td> {{ pedido[4] }} </td>
+                    <td class="text-center"> {{ pedido[5] }} </td>                    
+                    <td name="justificativa"> {{ pedido[7] }} </td>                    
+                    <td> {{ pedido[8] }} </td>
+                    <td>
+                        <a class="btn btn-success btn-sm" href="{{ url_for('admin.admin_pedidos.atender_pedido', id_pedido=pedido[0]) }}"><i class="bi bi-check2-circle"></i> Atender</a>                                                
+                    </td>
+                </tr>
+              {% endif %}
+            {% endfor %}
+          {% else %}     
+            <tr>
+              <td class="text-center" colspan="9">Não existem pedidos pendentes</td>
+            </tr>
+          {% endif %}                                 
+        </tbody>
+      </table>
+    </div>
+
+{% endblock %}

@@ -1,0 +1,160 @@
+{% extends 'base.html' %}
+
+{% block titulo %}SGAB - Pedidos{% endblock %}
+
+{% block conteudo %}
+
+<div class="container">
+    <h1 class="mt-1"><p class="text-center">PEDIDOS REALIZADOS</p></h1>
+
+    <div class="container">
+      {% with messages = get_flashed_messages(with_categories=true) %}
+          {% if messages %}
+              {% for categoria, mensagem in messages %}
+                  <div class="alert alert-{{ categoria }}" role="alert">
+                      {% if categoria == 'success' %}
+                          <i class="bi bi-emoji-sunglasses-fill"></i>
+                          <b>{{ mensagem }}</b>
+                      {% else %}
+                          <i class="bi bi-exclamation-triangle"></i>
+                          <b>{{ mensagem }}</b>
+                      {% endif %}
+                  </div>   
+              {% endfor %}                     
+          {% endif %}
+      {% endwith %}
+    </div>
+
+    <div class="container mb-1">
+      <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#pedidosModal">
+        <i class="bi bi-clipboard2-check"></i>
+        Novo pedido
+      </button>
+    </div>
+
+    <div class="container">
+      <table id="tabela" class="table table-striped">
+        <thead class="text-center">
+          <tr>          
+              <th width="10%">Data</th>                                      
+              <th>Descrição</th>            
+              <th>Categoria</th>            
+              <th>Qtde</th>            
+              <th>Liberado</th>                      
+              <th>Justificativa</th>            
+              <th width="7%">Concluído</th>            
+              <th width="7%">Status</th>            
+              <th width="9%">Ações</th>            
+          </tr>
+        </thead>
+        <tbody>
+          {% if pedidos != False %}
+            {% for pedido in pedidos: %}         
+              {% if pedido[7] == session['unidade_saude'] %} 
+                <tr>                
+                  <td> {{ pedido[1] }} </td>                  
+                  <td> {{ pedido[3] }} </td>
+                  <td> {{ pedido[4] }} </td>
+                  <td class="text-center"> {{ pedido[5] }} </td>                  
+                  <td class="text-center"> {{ pedido[6] }} </td>
+                  <td> {{ pedido[8] }} </td>
+                  <td> {{ pedido[9] }} </td>
+                    
+                  {% if pedido[10] == 0 %}
+                    <td class="text-center"><b style="color: rgb(108, 151, 230);">Pendente</b></td>
+                  {% elif pedido[10] == 1 %}
+                    <td class="text-center"><b style="color: rgb(5, 182, 5);">Concluído</b></td>
+                  {% else %}
+                    <td></td>
+                  {% endif %}     
+                  
+                  <td>
+                    {% if pedido[10] == 0 %}
+                      <a class="btn btn-success btn-sm" title="Editar" href="#"><i class="bi bi-pencil-square"></i></a>
+                      <a class="btn btn-danger btn-sm" title="Excluir" href="{{ url_for('coab.coab_pedidos.excluir', id_pedido=pedido[0]) }}"><i class="bi bi-trash3-fill"></i></a>                      
+                    {% elif pedido[10] == 1 %}
+                      <a class="btn btn-success btn-sm" title="Editar" href="#" onclick="mensagem('Você não pode editar um pedido com status concluído')"><i class="bi bi-pencil-square"></i></a>
+                      <a class="btn btn-danger btn-sm" title="Excluir" href="#" onclick="mensagem('Você não pode excluir um pedido com status concluído')"><i class="bi bi-trash3-fill"></i></a>                                          
+                    {% endif %}
+                  </td>
+                </tr>
+              {% endif %}                     
+            {% endfor %}
+          {% else %}
+            <tr>
+              <td class="text-center" colspan="8">Não existem pedidos cadastrados</td>
+            </tr>
+          {% endif %}
+        </tbody>
+      </table>
+    </div>        
+</div>
+  
+  <!-- Modal -->
+<div class="modal fade" id="pedidosModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    
+  <div class="modal-dialog modal-lg">
+    
+    <div class="modal-content" style="background-color: #eceef4;">
+      
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="exampleModalLabel">Fazer pedido</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      
+      <div class="modal-body">
+
+        <form action="{{url_for('coab.coab_pedidos.inserir')}}" method="post">
+          
+          <div class="row mb-3 g-2">                
+            <!-- Primeira linha -->
+            <div class="col-12">
+              <label id="categoriaLabel" for="categoria" class="form-label">Categoria</label>
+              <select id="categoria" class="form-select" name="categoria" required>
+                  <option value="" selected></option>
+                  <option value="Escritório">Escritório</option>
+                  <option value="Impresso">Impresso</option>
+                  <option value="Penso">Penso</option>
+                  <option value="Medicamento">Medicamento</option>                  
+              </select>
+            </div>
+            <!-- FIM da primeira linha -->
+
+            <!-- Segunda linha -->
+            <div class="col-9">
+              <label id="itens" for="item" class="form-label">Item</label>
+              <select id="item" class="form-select" name="item" required>
+                  <option value="" selected></option>
+                  <!-- <option value="" selected>Caneta</option>
+                  <option value="" selected>Solicitação</option>
+                  <option value="" selected>Borracha</option>
+                  <option value="" selected>Lápis</option>                   -->
+              </select>
+            </div>
+
+            <div class="col-3">
+              <label for="quantidade" class="form-label">Quantidade</label>
+              <input type="number" class="form-control" id="quantidade" name="quantidade" required>
+            </div>            
+            <!-- FIM da segunda linha -->
+            
+            <!-- Terceira linha -->
+            <div class="col-12">
+              <label for="justificativa" class="form-label">Justificativa</label>
+              <textarea class="form-control" id="justificativa" rows="3" name="justificativa"></textarea>
+            </div>            
+            <!-- FIM da terceira linha -->
+          </div>
+          <div class="modal-footer">
+            <!-- <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button> -->
+            <button type="submit" class="btn btn-primary"><i class="bi bi-floppy"></i> Fazer pedido</button>
+          </div>
+        </form>
+      </div>        
+    </div>
+  </div>
+</div> 
+
+<script src="{{url_for('static', filename='js/script.js')}}"></script>
+
+{% endblock %}

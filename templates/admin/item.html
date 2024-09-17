@@ -1,0 +1,137 @@
+{% extends 'base_admin.html' %}
+
+{% block titulo %} Cadastro de itens {% endblock %}
+
+{% block conteudo %}
+
+<div class="container">
+    
+    <h1><p class="text-center">ITENS CADASTRADOS</p></h1>
+
+    <div class="container">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for categoria, mensagem in messages %}
+                    <div class="alert alert-{{ categoria }}" role="alert">
+                        {% if categoria == 'success' %}
+                            <i class="bi bi-emoji-sunglasses-fill"></i>
+                            <b>{{ mensagem }}</b>
+                        {% else %}
+                            <i class="bi bi-exclamation-triangle"></i>
+                            <b>{{ mensagem }}</b>
+                        {% endif %}
+                    </div>   
+                {% endfor %}                     
+            {% endif %}
+        {% endwith %}
+    </div>
+        
+    <div class="container mb-2">        
+        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#itemModal">
+            <i class="bi bi-houses"></i>
+            Adicionar item
+        </button>
+    </div>    
+    
+    <div class="container">
+        <div class="table-responsive">
+        <table id="tabela" class="table table-striped">
+            <thead class="text-center">
+                <tr class="text-center">
+                    <th width="6%">ID</th>
+                    <th>Descrição</th>                    
+                    <th>Categoria</th>            
+                    <th width="7%">Status</th>                                 
+                    <th width="11%">Ações</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% if itens %}
+                    {% for item in itens %}
+                    <tr>
+                        <td> {{ item[0] }} </td>
+                        <td> {{ item[1] }} </td>
+                        <td> {{ item[2] }} </td>
+
+                        {% if item[3] == 0 %}
+                            <td class="text-center"><i class="bi bi-x-circle-fill"></i></td>
+                        {% elif item[3] == 1 %}                            
+                            <td class="text-center"><i class="bi bi-check-circle"></i></td>
+                        {% else %}
+                            <td class="text-center"></td>
+                        {% endif %}
+
+                        <td>                                        
+                            <div class="container">                          
+                                <a class="btn btn-success btn-sm" href=""><i class="bi bi-pencil-square"></i></a>
+                                <a class="btn btn-danger btn-sm" href=""><i class="bi bi-trash3-fill"></i></a>
+                            </div>
+                        </td> 
+                    </tr>
+                    {% endfor %}
+                {% else %}
+                <tr>
+                    <!-- <td class="text-center" colspan="5">Não existem itens a serem listados</td> -->
+                    <td class="text-center"></td>
+                    <td class="text-center"></td>
+                    <td class="text-center"></td>
+                    <td class="text-center"></td>
+                    <td class="text-center"></td>
+                </tr>
+                {% endif %}
+            </tbody>
+        </table>
+        </div>  
+    </div>
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="itemModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    
+    <div class="modal-dialog">
+
+        <div class="modal-content">
+        
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="exampleModalLabel">Cadastrar item</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+        
+        <div class="modal-body">
+
+            <form action="{{ url_for('admin.admin_item.inserir') }}" method="post">
+            
+                <div class="mb-3">
+                    <label for="descricao" class="col-form-label">Descrição do item:</label>
+                    <input type="text" name="descricao" class="form-control" id="descricao">
+
+                    <label id="categoria-label" for="categoria" class="form-label">Categoria</label>
+                    <select id="categoria" class="form-select" name="categoria">
+                        <option value="" selected></option>
+                        <option value="Escritório">Escritório</option>
+                        <option value="Impresso">Impresso</option>
+                        <option value="Penso">Penso</option>
+                        <option value="Medicamento">Medicamento</option>                  
+                    </select>
+
+                    <label id="status-label" for="categoria" class="form-label">Status</label>
+                    <select id="status" class="form-select" name="status">
+                        <option value="" selected></option>
+                        <option value="0">Inativo</option>
+                        <option value="1">Ativo</option>                        
+                    </select>
+                </div>            
+
+            <div class="modal-footer">              
+                <button type="submit" class="btn btn-primary">Salvar item</button>
+            </div>
+
+            </form>
+
+        </div>
+        
+        </div>
+    </div>
+</div> 
+
+{% endblock%}
