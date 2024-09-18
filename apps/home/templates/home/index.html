@@ -24,12 +24,13 @@
                 </thead>
                 <tbody>
                     {% for resultado in resultados %}
+                    
                     <tr>
                         <td>{{ resultado.partido }}</td>
                         <td>{{ resultado.total_votos }}</td>
                         <td>{{ resultado.total_votos / quociente_eleitoral }}</td>
                         <td>{{ resultado.total_votos // quociente_eleitoral }}</td>
-                        <td> 5 </td>
+                        <td>-</td>                        
                     </tr>
                     {% endfor %}
                 </tbody>

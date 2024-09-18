@@ -9,11 +9,15 @@ home_bp = Blueprint('home_bp', __name__, template_folder='templates')
 @home_bp.route('/')
 def index():
     candidatos = Candidato.query.all()
+    
     total_votos = db.session.query(func.sum(Candidato.votos)).scalar()
+    
     quociente_eleitoral = total_votos // 13
 
     resultados = db.session.query(Candidato.partido, func.sum(Candidato.votos).label('total_votos'))\
                            .group_by(Candidato.partido).all()
+    
+    print(resultados)
     
     return render_template('home/index.html', 
                            candidatos=candidatos, 
@@ -54,6 +58,11 @@ def excluir(id):
     
     return render_template('home/candidatos.html')
 
-# @home_bp.route('/candidatos/editar/<id:int>')
-# def editar():        
-#     return render_template('home/candidatos.html')
+@home_bp.route('/atualizar_candidato/<int:id>', methods=['POST'])
+def atualizar_candidato(id):
+    candidato = Candidato.query.get_or_404(id)
+    # Atualiza os campos conforme os valores do formulário    
+    candidato.votos = request.form['votos']    
+    
+    db.session.commit()
+    return '', 204  # Resposta vazia com código 204 (Sem conteúdo)
