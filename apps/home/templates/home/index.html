@@ -6,36 +6,82 @@
 
 <div class="container">
     <!-- <span class="navbar-text">Página principal do sistema</span> -->
-    
     <div class="row mt-3">
-        <div class="col-sm-6 mb-3 mb-sm-0">
+      <div class="col-sm-12 mb-3">
+        <div class="card border-dark">
+          <div class="card-body">
+            <h5 class="card-title text-center">Partidos</h5>
+            <hr>
+            <table cellpadding="10">
+                <thead>
+                    <tr>
+                        <th>Partido</th>
+                        <th>Total de Votos</th>
+                        <th>Quociente Partidário</th>
+                        <th>Vagas Quociente</th>
+                        <th>Vagas Média</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for resultado in resultados %}
+                    <tr>
+                        <td>{{ resultado.partido }}</td>
+                        <td>{{ resultado.total_votos }}</td>
+                        <td>{{ resultado.total_votos / quociente_eleitoral }}</td>
+                        <td>{{ resultado.total_votos // quociente_eleitoral }}</td>
+                        <td> 5 </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="row mt-3">
+        <div class="col-sm-4 mb-3 mb-sm-0">
           <div class="card border-dark">
             <div class="card-body">
-              <h5 class="card-title text-center">Relatório</h5>
+              <h5 class="card-title text-center">Resumo Geral</h5>
               <hr>
-              <p class="card-text">Pedidos realizados: </p>              
-              <p class="card-text">Pedidos pendentes: </p>              
+              <p class="card-text">Votos válidos: {{ total }}</p>              
+              <p class="card-text">Quociente eleitoral: {{ quociente_eleitoral }}</p>              
               <p class="card-text">Pedidos concluídos: </p>              
             </div>
           </div>
         </div>
-        <div class="col-sm-6 mb-3">
+        <div class="col-sm-8 mb-3">
           <div class="card border-dark">
             <div class="card-body">
-              <h5 class="card-title text-center">Mensagens</h5>
+              <h5 class="card-title text-center">Candidatos</h5>
               <hr>
-              <p>“Os problemas são oportunidades para se mostrar o que sabe”. (Duke Ellington)</p>
-              <p>“Nossos fracassos, às vezes, são mais frutíferos do que os êxitos”. (Henry Ford)</p>
-              <p>“Tente de novo. Fracasse de novo. Mas fracasse melhor”. (Samuel Beckett)</p>
-              <p>“É costume de um tolo, quando erra, queixar-se dos outros. É costume de um sábio queixar-se de si mesmo”. (Sócrates)</p>
-              <p>“O verdadeiro heroísmo consiste em persistir por mais um momento, quando tudo parece perdido”. (W. F. Grenfel)</p>
+              <div class="container">                
+                <table cellpadding="10">
+                    <thead>
+                        <tr>
+                            <th>Nome</th>
+                            <th>Partido</th>
+                            <th>Número</th>
+                            <th>Votos</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for candidato in candidatos %}
+                        <tr>
+                            <td>{{ candidato.nome }}</td>
+                            <td>{{ candidato.partido }}</td>
+                            <td>{{ candidato.numero }}</td>
+                            <td>{{ candidato.votos }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
             </div>
           </div>
-        </div>
+        </div>        
       </div> 
-    </div>
-
-    
+    </div>    
 </div>
 
 {% endblock %}

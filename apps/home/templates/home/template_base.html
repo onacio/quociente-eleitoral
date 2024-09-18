@@ -30,20 +30,15 @@
           <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav me-auto mb-2 mb-lg-0">
               <li class="nav-item">
-                <a class="nav-link active" aria-current="page" href="">Início</a>
+                <a class="nav-link active" aria-current="page" href="{{ url_for('home_bp.index') }}">Início</a>
               </li>
               <li class="nav-item">
-                <a class="nav-link" href="{{ url_for('home_bp.cadastrar') }}">Cadastrar candidato</a>
+                <a class="nav-link" href="{{ url_for('home_bp.cadastrar') }}">Cadastro</a>
               </li>              
-              <!-- <li class="nav-item dropdown">
-                <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                  Solicitações
-                </a>
-                <ul class="dropdown-menu">                  
-                  <li><a class="dropdown-item" href="#">Material Penso</a></li>                  
-                  <li><a class="dropdown-item" href="#">Material de escritório</a></li>                  
-                </ul>
-              </li>               -->
+                           
+              <li class="nav-item">
+                <a class="nav-link" href="{{ url_for('home_bp.candidatos') }}">Candidatos</a>
+              </li>            
             </ul>
             <form class="d-flex" role="search">              
               {% if session.usuario %}
